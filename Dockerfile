@@ -34,21 +34,21 @@ RUN set -eo pipefail; \
 
 # mirror plugins
 ## cache plugins to reduce network latency
-#ENV TF_PLUGIN_CACHE_DIR="/workspace/.terraform.d/plugin-cache" \
-#    TF_PLUGIN_MIRROR_DIR="/workspace/.terraform.d/plugins"
-#RUN set -eo pipefail; \
-#    mkdir -p $TF_PLUGIN_CACHE_DIR; \
-#    mkdir -p $TF_PLUGIN_MIRROR_DIR; \
-#    echo -e "provider_installation {\n \
-#      filesystem_mirror {\n \
-#        path = \"$TF_PLUGIN_MIRROR_DIR\"\n \
-#      }\n \
-#      direct {} \n \
-#    }\n" > /root/.terraformrc && \
-#    find . -maxdepth 1 -type d -name 'walrus-catalog*' -exec sh -c 'terraform -chdir="$1" init && terraform -chdir="$1" providers mirror $TF_PLUGIN_MIRROR_DIR' _ {} \;
-### remove non-plugin files to prevent annoying message
-#RUN set -eo pipefail; \
-#    find $TF_PLUGIN_MIRROR_DIR -type f ! -name "terraform-provider-*" -delete
+ENV TF_PLUGIN_CACHE_DIR="/workspace/.terraform.d/plugin-cache" \
+    TF_PLUGIN_MIRROR_DIR="/workspace/.terraform.d/plugins"
+RUN set -eo pipefail; \
+    mkdir -p $TF_PLUGIN_CACHE_DIR; \
+    mkdir -p $TF_PLUGIN_MIRROR_DIR; \
+    echo -e "provider_installation {\n \
+      filesystem_mirror {\n \
+        path = \"$TF_PLUGIN_MIRROR_DIR\"\n \
+      }\n \
+      direct {} \n \
+    }\n" > /root/.terraformrc && \
+    find . -maxdepth 1 -type d -name 'walrus-catalog*' -exec sh -c 'terraform -chdir="$1" init && terraform -chdir="$1" providers mirror $TF_PLUGIN_MIRROR_DIR' _ {} \;
+## remove non-plugin files to prevent annoying message
+RUN set -eo pipefail; \
+    find $TF_PLUGIN_MIRROR_DIR -type f ! -name "terraform-provider-*" -delete
 
 #
 # Release
