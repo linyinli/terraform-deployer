@@ -68,7 +68,7 @@ RUN set -eo pipefail; \
       python3 py3-pip bash \
     ; \
     pip3 install --upgrade pip; \
-    pip3 install requests; \
+    pip3 install requests boto3==1.24.18 botocore==1.27.18; \
     rm -rf /var/cache/apk/*; \
     pip3 cache purge
 
